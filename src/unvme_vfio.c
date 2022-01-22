@@ -356,7 +356,7 @@ vfio_device_t* vfio_create(int pci)
     if (pthread_spin_init(&dev->lock, PTHREAD_PROCESS_PRIVATE)) return NULL;
 
     // map vfio context
-    if ((dev->contfd = open("/dev/vfio/vfio", O_RDWR)) < 0) {
+    if ((dev->contfd = open("/dev/iommu", O_RDWR)) < 0) {
         ERROR("open /dev/vfio/vfio");
         goto error;
     }
