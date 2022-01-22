@@ -356,7 +356,7 @@ vfio_device_t* vfio_create(int pci)
     if (pthread_spin_init(&dev->lock, PTHREAD_PROCESS_PRIVATE)) return NULL;
 
     // map vfio context
-    if ((dev->contfd = open("/dev/vfio/vfio", O_RDWR)) < 0) {
+    if ((dev->contfd = open("/dev/iommu", O_RDWR)) < 0) {
         ERROR("open /dev/vfio/vfio");
         goto error;
     }
@@ -364,7 +364,7 @@ vfio_device_t* vfio_create(int pci)
         ERROR("ioctl VFIO_GET_API_VERSION");
         goto error;
     }
-    if (ioctl(dev->contfd, VFIO_CHECK_EXTENSION, VFIO_TYPE1_IOMMU) == 0) {
+    if (ioctl(dev->contfd, VFIO_CHECK_EXTENSION, VFIO_TYPE1v2_IOMMU) == 0) {
         ERROR("ioctl VFIO_CHECK_EXTENSION");
         goto error;
     }
@@ -387,7 +387,7 @@ vfio_device_t* vfio_create(int pci)
         goto error;
     }
 
-    if (ioctl(dev->contfd, VFIO_SET_IOMMU, VFIO_TYPE1_IOMMU) < 0) {
+    if (ioctl(dev->contfd, VFIO_SET_IOMMU, VFIO_TYPE1v2_IOMMU) < 0) {
         ERROR("ioctl VFIO_SET_IOMMU");
         goto error;
     }
