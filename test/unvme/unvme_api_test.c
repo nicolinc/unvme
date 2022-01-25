@@ -304,6 +304,7 @@ int main(int argc, char* argv[])
         }
         elapsed_time(&t0);
 
+#if 0
         printf("# Testing async-read (loop %d)...", l);
         if (pause && fgets(cr, sizeof (cr), stdin)); else printf("\n");
         gettimeofday(&t0, 0);
@@ -345,6 +346,7 @@ int main(int argc, char* argv[])
             }
         }
         elapsed_time(&t0);
+#endif
 
         printf("# Testing sync-write sync-read verify (loop %d)...", l);
         if (pause && fgets(cr, sizeof (cr), stdin)); else printf("\n");
@@ -366,6 +368,7 @@ int main(int argc, char* argv[])
         }
         elapsed_time(&t0);
 
+#if 0
         printf("# Testing async-write sync-read verify (loop %d)...", l);
         if (pause && fgets(cr, sizeof (cr), stdin)); else printf("\n");
         gettimeofday(&t0, 0);
@@ -470,6 +473,7 @@ int main(int argc, char* argv[])
             }
         }
         elapsed_time(&t0);
+#endif
 
         // free all pages in each queue
         for (q = 0; q < qcount; q++) {
