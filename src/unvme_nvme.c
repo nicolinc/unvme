@@ -494,7 +494,7 @@ nvme_queue_t* nvme_create_ioq(nvme_device_t* dev, int id, int qsize,
  */
 int nvme_delete_ioq(nvme_queue_t* ioq)
 {
-    if (nvme_acmd_delete_sq(ioq) || nvme_acmd_delete_cq(ioq)) return -1;
+    //if (nvme_acmd_delete_sq(ioq) || nvme_acmd_delete_cq(ioq)) return -1;
     free(ioq);
     return 0;
 }
