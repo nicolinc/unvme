@@ -37,8 +37,8 @@
 #include <sys/mman.h>
 #include <string.h>
 #include <errno.h>
+#include <unistd.h>
 
-#include "rdtsc.h"
 #include "unvme_log.h"
 #include "unvme_nvme.h"
 
@@ -206,9 +206,14 @@ int nvme_wait_completion(nvme_queue_t* q, int cid, int timeout)
 {
     u64 endtsc = 0;
 
+    if (timeout < 1)
+	    timeout = 1;
+    endtsc = 10000 * timeout;
+
     do {
-        int stat;
-        int ret = nvme_check_completion(q, &stat);
+        int stat, ret;
+        usleep(100);
+        ret = nvme_check_completion(q, &stat);
         if (ret >= 0) {
             if (ret == cid && stat == 0) return 0;
             if (ret != cid) {
@@ -216,10 +221,8 @@ int nvme_wait_completion(nvme_queue_t* q, int cid, int timeout)
                 stat = -1;
             } else ERROR("status %#x", stat);
             return stat;
-        } else if (endtsc == 0) {
-            endtsc = rdtsc() + timeout * rdtsc_second();
         }
-    } while (rdtsc() < endtsc);
+    } while (--endtsc);
 
     ERROR("timeout");
     return -1;

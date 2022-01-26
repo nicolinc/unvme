@@ -117,14 +117,15 @@ unvme_page_t* unvme_poll(const unvme_ns_t* ns, unvme_page_t* pa, int sec)
     if (p) return p;
 
     if (sec > 0) {
-        u64 timeout = rdtsc() + sec * rdtsc_second();
+        u64 timeout = sec * 100;
         do {
+            usleep(10000);
             if ((p = unvme_check_cq(q))) {
                 if (p->id == cid) return p;
                 unvme_cpq_put(piocpq, p);
             }
-        } while (rdtsc() < timeout);
-        //ERROR("timeout %d seconds", sec);
+        } while (timeout--);
+        ERROR("timeout %d seconds", sec);
     }
 
     return NULL;
@@ -160,11 +161,12 @@ unvme_page_t* unvme_apoll(const unvme_ns_t* ns, int qid, int sec)
     if (p) return p;
 
     if (sec > 0) {
-        u64 timeout = rdtsc() + sec * rdtsc_second();
+        u64 timeout = sec * 100;
         do {
+	    usleep(10000);
             if ((p = unvme_check_cq(q))) return p;
-        } while (rdtsc() < timeout);
-        //ERROR("timeout %d seconds", sec);
+        } while (timeout--);
+        ERROR("timeout %d seconds", sec);
     }
 
     return NULL;

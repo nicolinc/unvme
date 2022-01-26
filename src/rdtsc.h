@@ -54,7 +54,8 @@ static inline uint64_t rdtsc(void)
             uint32_t hi;
         };
     } tsc;
-    asm volatile ("rdtsc" : "=a" (tsc.lo), "=d" (tsc.hi));
+    //asm volatile ("rdtsc" : "=a" (tsc.lo), "=d" (tsc.hi));
+    // FIXME rdtsc is not available on ARM
     return tsc.val;
 }
 
