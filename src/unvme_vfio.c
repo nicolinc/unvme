@@ -324,7 +324,7 @@ vfio_device_t* vfio_create(int pci)
     char pciname[64];
     char path[128];
     int i;
-    sprintf(pciname, "0000:%02x:%02x.%x", pci >> 16, (pci >> 8) & 0xff, pci & 0xff);
+    sprintf(pciname, "00%02x:%02x:%02x.%x", (pci >> 24) & 0xff, (pci >> 16) & 0xff, (pci >> 8) & 0xff, pci & 0xff);
 
     sprintf(path, "/sys/bus/pci/devices/%s/driver", pciname);
     if ((i = readlink(path, path, sizeof(path))) < 0) {

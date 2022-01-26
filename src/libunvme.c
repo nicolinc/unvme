@@ -55,9 +55,9 @@ unvme_client_t  client = {  .lock = PTHREAD_MUTEX_INITIALIZER,
  */
 const unvme_ns_t* unvme_open(const char* pciname, int nsid, int qcount, int qsize)
 {
-    int b, d, f;
-    if (sscanf(pciname, "%02x:%02x.%1x", &b, &d, &f) != 3) {
-        ERROR("invalid PCI device %s (expect BB:DD.F format)", pciname);
+    int a, b, d, f;
+    if (sscanf(pciname, "00%02x:%02x:%02x.%1x", &a, &b, &d, &f) != 4) {
+        ERROR("invalid PCI device %s (expect 00AA:BB:DD.F format)", pciname);
         return NULL;
     }
     if (qcount < 1 || qsize < 2) {
@@ -65,7 +65,7 @@ const unvme_ns_t* unvme_open(const char* pciname, int nsid, int qcount, int qsiz
         return NULL;
     }
 
-    int pci = (b << 16) + (d << 8) + f;
+    int pci = (a << 24) + (b << 16) + (d << 8) + f;
 
     pthread_mutex_lock(&client.lock);
     unvme_session_t* ses = client_open(pci, nsid, qcount, qsize);
