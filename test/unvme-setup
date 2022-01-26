@@ -48,7 +48,6 @@ vfio_check() {
         echo "ERROR: UNVMe requires VFIO, IOMMU, and VT-d enabled"
         exit 1
     fi
-    mycmd modprobe vfio-pci
 }
 
 # 
@@ -84,7 +83,8 @@ vfio_unbind_all() {
 #
 print_map() {
     for d in $(lspci -Dn | grep '0108: ' | cut -d" " -f1); do
-        m=$(find /sys/bus/pci/drivers -name $d -printf %h)
+        m=$(find /sys/bus/pci/drivers -name $d -print)
+        m=${m::-13}
         case $m in 
         */nvme)
             m="mapped to $(ls /sys/bus/pci/devices/$d/nvme)"
@@ -133,7 +133,7 @@ else
     vfio_check
     for i in $*; do
         case $i in
-        [0-9][0-9]:*)
+        [0-9][0-9][0-9][0-9]:*)
             if [ -z "$(lspci -n | grep $i\ 0108\:)" ]; then
                 echo -e "No SSD found at PCI $i"
                 myusage
@@ -149,7 +149,7 @@ else
 
     echo -e "# Setup specified SSD device(s) for UNVMe driver"
     for i in $*; do
-        vfio_bind $(find /sys/bus/pci/devices/*$i -printf %f)
+        vfio_bind $i
     done
     print_map
 fi
