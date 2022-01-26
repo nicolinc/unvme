@@ -49,10 +49,10 @@
 #include "unvme_log.h"
 
 /// Starting device DMA address
-#define VFIO_IOVA           0xa100000000
+#define VFIO_IOVA           0x7f000000
 
 /// Adjust to 4K page aligned size
-#define VFIO_PASIZE(n)      (((n) + 0xfff) & ~0xfff)
+#define VFIO_PASIZE(n)      (((n) + 0xffff) & ~0xffff)
 
 /// IRQ index names
 const char* vfio_irq_names[] = { "INTX", "MSI", "MSIX", "ERR", "REQ" };
